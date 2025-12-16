@@ -2,20 +2,16 @@ databases:
   - name: reviewcycle-db
     databaseName: reviewcycle
     user: reviewcycle_user
-    plan: free  # Free tier: 1GB storage, 90 days retention, sleeps after inactivity
+    plan: free
     region: oregon
 
 services:
   - type: web
     name: reviewcycle-api
     runtime: node
-    plan: starter  # $7/month: Always on, 512MB RAM, shared CPU
+    plan: starter
     region: oregon
-    # Enable pnpm and build from root
-    buildCommand: |
-      npm install -g pnpm@latest
-      pnpm install --frozen-lockfile
-      pnpm --filter @reviewcycle/server build
+    buildCommand: npm install -g pnpm && pnpm install --frozen-lockfile && pnpm --filter @reviewcycle/server build
     startCommand: cd packages/server && node dist/index.js
     healthCheckPath: /health
     envVars:
