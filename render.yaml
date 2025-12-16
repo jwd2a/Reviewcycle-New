@@ -11,8 +11,8 @@ services:
     runtime: node
     plan: starter
     region: oregon
-    # Build from monorepo root, install all workspaces
-    buildCommand: corepack enable && corepack prepare pnpm@latest --activate && pnpm install && cd packages/server && pnpm build
+    # Build workspace dependencies first, then server
+    buildCommand: corepack enable && corepack prepare pnpm@latest --activate && pnpm install && pnpm --filter @reviewcycle/shared build && pnpm --filter @reviewcycle/server build
     startCommand: cd packages/server && node dist/index.js
     healthCheckPath: /health
     envVars:
