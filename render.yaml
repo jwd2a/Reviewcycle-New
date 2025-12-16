@@ -2,14 +2,14 @@ databases:
   - name: reviewcycle-db
     databaseName: reviewcycle
     user: reviewcycle_user
-    plan: starter
+    plan: free  # Free tier: 1GB storage, 90 days retention, sleeps after inactivity
     region: oregon
 
 services:
   - type: web
     name: reviewcycle-api
     runtime: node
-    plan: starter
+    plan: starter  # $7/month: Always on, 512MB RAM, shared CPU
     region: oregon
     buildCommand: pnpm install && pnpm --filter @reviewcycle/server build
     startCommand: cd packages/server && pnpm start
