@@ -1,0 +1,24 @@
+{
+  "name": "reviewcycle-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ReviewCycle - Lightweight prototype review and commenting system",
+  "scripts": {
+    "dev": "pnpm --filter @reviewcycle/client dev",
+    "build": "pnpm --filter @reviewcycle/client build",
+    "demo": "pnpm --filter demo dev"
+  },
+  "keywords": [
+    "review",
+    "comments",
+    "prototype",
+    "feedback",
+    "collaboration"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}
