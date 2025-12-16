@@ -11,8 +11,12 @@ services:
     runtime: node
     plan: starter  # $7/month: Always on, 512MB RAM, shared CPU
     region: oregon
-    buildCommand: pnpm install && pnpm --filter @reviewcycle/server build
-    startCommand: cd packages/server && pnpm start
+    # Enable pnpm and build from root
+    buildCommand: |
+      npm install -g pnpm@latest
+      pnpm install --frozen-lockfile
+      pnpm --filter @reviewcycle/server build
+    startCommand: cd packages/server && node dist/index.js
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
