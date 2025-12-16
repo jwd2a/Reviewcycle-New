@@ -19,7 +19,7 @@ pool.on('connect', () => {
   console.log('PostgreSQL client connected');
 });
 
-export async function query<T = any>(
+export async function query<T extends pg.QueryResultRow = any>(
   text: string,
   params?: any[]
 ): Promise<pg.QueryResult<T>> {

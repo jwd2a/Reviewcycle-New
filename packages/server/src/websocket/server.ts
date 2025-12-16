@@ -32,7 +32,7 @@ export async function setupWebSocket(fastify: FastifyInstance) {
 
         // Handle authentication
         if (message.type === 'auth') {
-          const authMessage = message as AuthMessage;
+          const authMessage = message as unknown as AuthMessage;
           const apiKey = authMessage.apiKey;
 
           if (!apiKey || !apiKey.startsWith('rc_proj_')) {
@@ -94,7 +94,7 @@ export async function setupWebSocket(fastify: FastifyInstance) {
       }
     });
 
-    socket.on('error', (error) => {
+    socket.on('error', (error: Error) => {
       console.error('WebSocket error:', error);
     });
   });
