@@ -1,20 +1,16 @@
-services:
-  # PostgreSQL Database
-  - type: pserv
-    name: reviewcycle-db
+databases:
+  - name: reviewcycle-db
+    databaseName: reviewcycle
+    user: reviewcycle_user
     plan: starter
     region: oregon
-    ipAllowList: []
-    databases:
-      - name: reviewcycle
-        user: reviewcycle_user
 
-  # Backend API Server
+services:
   - type: web
     name: reviewcycle-api
     runtime: node
-    region: oregon
     plan: starter
+    region: oregon
     buildCommand: pnpm install && pnpm --filter @reviewcycle/server build
     startCommand: cd packages/server && pnpm start
     healthCheckPath: /health
