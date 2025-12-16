@@ -73,3 +73,45 @@ export interface GeneratedPrompt {
   tokensUsed: number;
   model: string;
 }
+
+// WebSocket Message Types
+export type WebSocketEventType =
+  | 'auth'
+  | 'auth_success'
+  | 'auth_error'
+  | 'comment.created'
+  | 'comment.updated'
+  | 'comment.deleted'
+  | 'error';
+
+export interface WebSocketMessage {
+  type: WebSocketEventType;
+  payload: unknown;
+  timestamp?: string;
+}
+
+export interface AuthMessage {
+  type: 'auth';
+  apiKey: string;
+}
+
+export interface AuthSuccessMessage {
+  type: 'auth_success';
+  projectId: string;
+}
+
+export interface CommentCreatedPayload {
+  comment: Comment;
+  url: string;
+}
+
+export interface CommentUpdatedPayload {
+  comment: Comment;
+  url: string;
+}
+
+export interface CommentDeletedPayload {
+  commentId: string;
+  deletedIds: string[];
+  url: string;
+}

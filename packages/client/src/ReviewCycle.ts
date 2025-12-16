@@ -21,7 +21,7 @@ export default class ReviewCycle {
       ...config,
     };
 
-    this.stateManager = new StateManager(this.config.mode!);
+    this.stateManager = new StateManager(this.config);
     this.elementSelector = new ElementSelector();
   }
 
@@ -39,6 +39,7 @@ export default class ReviewCycle {
     if (!this.initialized) return;
 
     this.elementSelector.deactivate();
+    this.stateManager.destroy();
 
     if (this.overlay) {
       this.overlay.remove();
