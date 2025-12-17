@@ -18,7 +18,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "review",
@@ -27,8 +28,16 @@
     "feedback",
     "collaboration"
   ],
-  "author": "",
+  "author": "Madera Labs",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jwd2a/Reviewcycle-New"
+  },
+  "homepage": "https://github.com/jwd2a/Reviewcycle-New#readme",
+  "bugs": {
+    "url": "https://github.com/jwd2a/Reviewcycle-New/issues"
+  },
   "devDependencies": {
     "@types/node": "^20.10.0",
     "typescript": "^5.3.3",

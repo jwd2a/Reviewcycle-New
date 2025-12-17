@@ -14,11 +14,16 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["reviewcycle", "types", "shared"],
+  "author": "Madera Labs",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jwd2a/Reviewcycle-New"
+  },
   "devDependencies": {
     "typescript": "^5.3.3"
   }
