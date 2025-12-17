@@ -62,6 +62,10 @@ fastify.get('/api/test', {
 // Start server
 async function start() {
   try {
+    // Run migrations on startup
+    const { runMigrations } = await import('./db/migrations.js');
+    await runMigrations();
+
     await fastify.listen({
       port: serverConfig.port,
       host: serverConfig.host,
