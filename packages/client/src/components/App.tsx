@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import { Comment, ReviewCycleConfig, ElementContext } from '@reviewcycle/shared';
+import { Comment, ReviewCycleConfig, ElementContext } from 'reviewcycle-shared';
 import { StateManager } from '../services/StateManager.js';
 import { ElementSelector } from '../services/ElementSelector.js';
 import { FloatingButton } from './FloatingButton.js';

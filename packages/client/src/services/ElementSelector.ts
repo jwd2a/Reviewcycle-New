@@ -1,4 +1,4 @@
-import { ElementContext } from '@reviewcycle/shared';
+import { ElementContext } from 'reviewcycle-shared';
 import {
   isReviewCycleElement,
   generateUniqueSelector,

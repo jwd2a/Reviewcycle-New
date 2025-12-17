@@ -14,13 +14,13 @@ Lightweight commenting and review tool for prototypes and web applications. Add 
 ## Installation
 
 ```bash
-npm install @reviewcycle/client
+npm install reviewcycle-client
 ```
 
 ## Quick Start
 
 ```typescript
-import ReviewCycle from '@reviewcycle/client';
+import ReviewCycle from 'reviewcycle-client';
 
 const rc = new ReviewCycle({
   apiKey: 'your_api_key',

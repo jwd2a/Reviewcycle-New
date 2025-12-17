@@ -1,5 +1,5 @@
 import { h, render } from 'preact';
-import { ReviewCycleConfig } from '@reviewcycle/shared';
+import { ReviewCycleConfig } from 'reviewcycle-shared';
 import { StateManager } from './services/StateManager.js';
 import { ElementSelector } from './services/ElementSelector.js';
 import { App } from './components/App.js';

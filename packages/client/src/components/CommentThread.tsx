@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import { Comment } from '@reviewcycle/shared';
+import { Comment } from 'reviewcycle-shared';
 import { StateManager } from '../services/StateManager.js';
 
 interface CommentThreadProps {

@@ -1,5 +1,5 @@
 {
-  "name": "@reviewcycle/shared",
+  "name": "reviewcycle-shared",
   "version": "0.1.0",
   "description": "Shared types and utilities for ReviewCycle",
   "main": "./dist/index.js",

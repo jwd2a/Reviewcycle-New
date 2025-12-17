@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { Comment } from '@reviewcycle/shared';
+import { Comment } from 'reviewcycle-shared';
 import { findElementBySelector, findElementByXPath } from '../utils/positioning.js';
 
 interface CommentMarkerProps {

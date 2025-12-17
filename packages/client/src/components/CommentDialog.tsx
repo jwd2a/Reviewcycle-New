@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
-import { ElementContext } from '@reviewcycle/shared';
+import { ElementContext } from 'reviewcycle-shared';
 
 interface CommentDialogProps {
   context: ElementContext;

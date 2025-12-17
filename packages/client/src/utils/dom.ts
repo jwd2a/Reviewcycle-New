@@ -1,4 +1,4 @@
-import { ElementInfo } from '@reviewcycle/shared';
+import { ElementInfo } from 'reviewcycle-shared';
 
 export function isReviewCycleElement(element: Element): boolean {
   const el = element as HTMLElement;

@@ -1,4 +1,4 @@
-import { BoundingRect } from '@reviewcycle/shared';
+import { BoundingRect } from 'reviewcycle-shared';
 
 export function getElementPosition(element: HTMLElement): BoundingRect {
   const rect = element.getBoundingClientRect();

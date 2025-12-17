@@ -1,4 +1,4 @@
-import type { Comment, CreateCommentRequest, ReviewCycleConfig } from '@reviewcycle/shared';
+import type { Comment, CreateCommentRequest, ReviewCycleConfig } from 'reviewcycle-shared';
 
 export class ApiError extends Error {
   constructor(

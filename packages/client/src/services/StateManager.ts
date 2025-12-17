@@ -5,7 +5,7 @@ import type {
   CommentCreatedPayload,
   CommentUpdatedPayload,
   CommentDeletedPayload,
-} from '@reviewcycle/shared';
+} from 'reviewcycle-shared';
 import { createId } from '@paralleldrive/cuid2';
 import { ApiClient } from './ApiClient.js';
 import { WebSocketManager } from './WebSocketManager.js';

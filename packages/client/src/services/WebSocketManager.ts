@@ -3,7 +3,7 @@ import type {
   WebSocketMessage,
   AuthMessage,
   WebSocketEventType,
-} from '@reviewcycle/shared';
+} from 'reviewcycle-shared';
 
 type EventHandler = (payload: any) => void;
 
