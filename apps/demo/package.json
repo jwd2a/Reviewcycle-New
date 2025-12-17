@@ -12,6 +12,6 @@
     "vite": "^5.0.8"
   },
   "dependencies": {
-    "@reviewcycle/client": "workspace:*"
+    "reviewcycle-client": "workspace:*"
   }
 }

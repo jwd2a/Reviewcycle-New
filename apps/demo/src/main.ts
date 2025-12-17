@@ -1,4 +1,4 @@
-import ReviewCycle from '@reviewcycle/client';
+import ReviewCycle from 'reviewcycle-client';
 
 // Initialize ReviewCycle in production mode with local backend
 const rc = new ReviewCycle({

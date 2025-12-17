@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
-    "reviewcycle-shared": "workspace:*",
+    "reviewcycle-shared": "^0.1.0",
     "preact": "^10.19.3"
   }
 }

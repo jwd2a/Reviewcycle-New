@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import websocket from '@fastify/websocket';
 import { roomManager } from './rooms.js';
 import { getProjectByApiKey } from '../services/project-service.js';
-import type { AuthMessage, WebSocketMessage } from '@reviewcycle/shared';
+import type { AuthMessage, WebSocketMessage } from 'reviewcycle-shared';
 
 export async function setupWebSocket(fastify: FastifyInstance) {
   // Register WebSocket plugin

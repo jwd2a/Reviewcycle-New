@@ -10,7 +10,7 @@ importers:
 
   apps/demo:
     dependencies:
-      '@reviewcycle/client':
+      reviewcycle-client:
         specifier: workspace:*
         version: link:../../packages/client
     devDependencies:
@@ -23,12 +23,12 @@ importers:
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.3.1
-      '@reviewcycle/shared':
-        specifier: workspace:*
-        version: link:../shared
       preact:
         specifier: ^10.19.3
         version: 10.28.0
+      reviewcycle-shared:
+        specifier: ^0.1.0
+        version: link:../shared
     devDependencies:
       '@types/node':
         specifier: ^20.10.0
@@ -54,9 +54,6 @@ importers:
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.3.1
-      '@reviewcycle/shared':
-        specifier: workspace:*
-        version: link:../shared
       dotenv:
         specifier: ^16.4.1
         version: 16.6.1
@@ -66,6 +63,9 @@ importers:
       pg:
         specifier: ^8.11.3
         version: 8.16.3
+      reviewcycle-shared:
+        specifier: workspace:*
+        version: link:../shared
     devDependencies:
       '@types/node':
         specifier: ^20.10.0

@@ -8,7 +8,7 @@ import type {
   CommentCreatedPayload,
   CommentUpdatedPayload,
   CommentDeletedPayload,
-} from '@reviewcycle/shared';
+} from 'reviewcycle-shared';
 
 export async function commentRoutes(fastify: FastifyInstance) {
   // All comment routes require authentication

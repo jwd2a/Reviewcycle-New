@@ -1,6 +1,6 @@
 import { createId } from '@paralleldrive/cuid2';
 import { query, getClient } from '../db/connection.js';
-import type { Comment, CreateCommentRequest } from '@reviewcycle/shared';
+import type { Comment, CreateCommentRequest } from 'reviewcycle-shared';
 
 interface DbComment {
   id: string;
