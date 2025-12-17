@@ -30,3 +30,5 @@ services:
         value: "*"
       - key: API_KEY_PREFIX
         value: rc_proj_
+      - key: ADMIN_API_KEY
+        generateValue: true

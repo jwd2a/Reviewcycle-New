@@ -4,6 +4,7 @@ import { errorHandler } from './middleware/error-handler.js';
 import { authMiddleware } from './middleware/auth.js';
 import { configureCors } from './middleware/cors.js';
 import { commentRoutes } from './routes/comments.js';
+import { adminRoutes } from './routes/admin.js';
 import { setupWebSocket } from './websocket/server.js';
 
 const fastify = Fastify({
@@ -23,6 +24,7 @@ await setupWebSocket(fastify);
 
 // Register routes
 fastify.register(commentRoutes);
+fastify.register(adminRoutes);
 
 // Health check endpoint (public)
 fastify.get('/health', async (request, reply) => {

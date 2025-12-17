@@ -9,6 +9,7 @@ export interface ServerConfig {
   databaseUrl: string;
   allowedOrigins: string[];
   apiKeyPrefix: string;
+  adminApiKey: string;
 }
 
 function getConfig(): ServerConfig {
@@ -18,9 +19,14 @@ function getConfig(): ServerConfig {
   const databaseUrl = process.env.DATABASE_URL;
   const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['*'];
   const apiKeyPrefix = process.env.API_KEY_PREFIX || 'rc_proj_';
+  const adminApiKey = process.env.ADMIN_API_KEY;
 
   if (!databaseUrl) {
     throw new Error('DATABASE_URL environment variable is required');
+  }
+
+  if (!adminApiKey) {
+    throw new Error('ADMIN_API_KEY environment variable is required');
   }
 
   return {
@@ -30,6 +36,7 @@ function getConfig(): ServerConfig {
     databaseUrl,
     allowedOrigins,
     apiKeyPrefix,
+    adminApiKey,
   };
 }
 
