@@ -110,11 +110,11 @@ hurl scripts/hurl/create-api-key.hurl --json
 
 ## Configuration
 
-The `.hurlrc` file sets default variables. You can override them with:
+You can set variables in multiple ways:
 
-1. **Environment variables:**
+1. **Variables file (recommended):**
    ```bash
-   export REVIEWCYCLE_API_URL="http://localhost:3000"
+   hurl --variables-file scripts/hurl/.env file.hurl
    ```
 
 2. **Command-line variables:**
@@ -122,9 +122,9 @@ The `.hurlrc` file sets default variables. You can override them with:
    hurl file.hurl --variable api_url="http://localhost:3000"
    ```
 
-3. **Variables file:**
+3. **Combine both:**
    ```bash
-   hurl file.hurl --variables-file vars.env
+   hurl --variables-file .env file.hurl --variable project_name="Override"
    ```
 
 ## Examples
@@ -156,7 +156,7 @@ hurl scripts/hurl/*.hurl --test
 - `list-projects.hurl` - List all projects
 - `delete-project.hurl` - Delete a project
 - `test-comment-workflow.hurl` - Complete CRUD workflow test
-- `.hurlrc` - Default configuration and variables
+- `.env.example` - Example variables file (copy to `.env`)
 
 ## Learn More
 
