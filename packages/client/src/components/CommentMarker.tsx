@@ -1,7 +1,6 @@
 import { FunctionComponent } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
 import { Comment } from 'reviewcycle-shared';
-import { findElementBySelector, findElementByXPath } from '../utils/positioning.js';
+import { useElementTracking } from '../hooks/useElementTracking.js';
 
 interface CommentMarkerProps {
   comment: Comment;
@@ -12,49 +11,11 @@ export const CommentMarker: FunctionComponent<CommentMarkerProps> = ({
   comment,
   onClick,
 }) => {
-  const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
+  // Use the element tracking hook to automatically handle DOM changes and SPA navigation
+  const { position, isVisible } = useElementTracking(comment);
 
-  useEffect(() => {
-    updatePosition();
-
-    // Update position on scroll and resize
-    window.addEventListener('scroll', updatePosition);
-    window.addEventListener('resize', updatePosition);
-
-    return () => {
-      window.removeEventListener('scroll', updatePosition);
-      window.removeEventListener('resize', updatePosition);
-    };
-  }, [comment]);
-
-  const updatePosition = () => {
-    // Try to find the element and update position
-    let element: HTMLElement | null = null;
-
-    if (comment.elementSelector) {
-      element = findElementBySelector(comment.elementSelector);
-    }
-
-    if (!element && comment.elementXPath) {
-      element = findElementByXPath(comment.elementXPath);
-    }
-
-    if (element) {
-      const rect = element.getBoundingClientRect();
-      setPosition({
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2,
-      });
-    } else if (comment.boundingRect) {
-      // Fall back to stored position
-      setPosition({
-        x: comment.boundingRect.x,
-        y: comment.boundingRect.y,
-      });
-    }
-  };
-
-  if (!position) return null;
+  // Don't render if position is not available or element is not visible
+  if (!position || !isVisible) return null;
 
   const style = {
     left: `${position.x}px`,
