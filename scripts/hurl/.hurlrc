@@ -1,0 +1,17 @@
+# Example environment file for Hurl scripts
+# Copy to .env and fill in your values
+
+# Production API URL (default)
+api_url=https://reviewcycle-api.onrender.com
+
+# Local development API URL
+# api_url=http://localhost:3000
+
+# Admin API key (get from Render dashboard)
+admin_key=plcDe/28KeTl+0/qwYp/cqD/+W+4Mxnx70v71irnefU=
+
+# Project API key (or use demo)
+api_key=rc_proj_demo123
+
+# Default project name for creation
+project_name=My New Project
