@@ -1,23 +1,17 @@
 # Hurl configuration file
 #
-# This file sets default variables for all .hurl files in this directory
-#
-# Override these with --variable flag or environment variables:
-#   export REVIEWCYCLE_API_URL=http://localhost:3000
-#   export REVIEWCYCLE_ADMIN_KEY=your_admin_key
-#   export REVIEWCYCLE_API_KEY=rc_proj_demo123
+# Set default variables here or via command line with --variable
+# These are used by all .hurl files in this directory
 
 # Default API URL (production)
-variable "api_url" = "https://reviewcycle-api.onrender.com"
+api_url=https://reviewcycle-api.onrender.com
 
 # For local development, uncomment:
-# variable "api_url" = "http://localhost:3000"
+# api_url=http://localhost:3000
 
-# Admin key (set via environment variable)
-variable "admin_key" = "{{REVIEWCYCLE_ADMIN_KEY}}"
+# Set these via command line or create a .env file:
+# admin_key=your_admin_key_here
+# api_key=rc_proj_demo123
 
-# Project API key (set via environment variable or use demo)
-variable "api_key" = "{{REVIEWCYCLE_API_KEY}}"
-
-# Default project name for creation
-variable "project_name" = "New Project"
+# Default project name
+project_name=New Project

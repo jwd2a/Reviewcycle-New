@@ -14,17 +14,33 @@ brew install hurl
 
 ## Setup
 
-Set your environment variables:
+### Option 1: Use .env file (Recommended)
 
-```bash
-export REVIEWCYCLE_API_URL="https://reviewcycle-api.onrender.com"
-export REVIEWCYCLE_ADMIN_KEY="your_admin_key_here"
-export REVIEWCYCLE_API_KEY="rc_proj_demo123"
-```
+1. Copy the example file:
+   ```bash
+   cp scripts/hurl/.env.example scripts/hurl/.env
+   ```
 
-For local development:
+2. Edit `.env` with your values:
+   ```bash
+   api_url=https://reviewcycle-api.onrender.com
+   admin_key=your_admin_key_from_render
+   api_key=rc_proj_demo123
+   ```
+
+3. Run Hurl with the env file:
+   ```bash
+   hurl --variables-file scripts/hurl/.env scripts/hurl/create-api-key.hurl
+   ```
+
+### Option 2: Use command-line variables
+
+Pass variables directly:
 ```bash
-export REVIEWCYCLE_API_URL="http://localhost:3000"
+hurl scripts/hurl/create-api-key.hurl \
+  --variable api_url=https://reviewcycle-api.onrender.com \
+  --variable admin_key=your_admin_key \
+  --variable project_name="My Project"
 ```
 
 ## Usage
@@ -33,18 +49,24 @@ export REVIEWCYCLE_API_URL="http://localhost:3000"
 
 **Create a new project and API key:**
 ```bash
+# Using .env file
+hurl --variables-file scripts/hurl/.env scripts/hurl/create-api-key.hurl
+
+# Or with command-line variables
 hurl scripts/hurl/create-api-key.hurl \
+  --variable api_url=https://reviewcycle-api.onrender.com \
+  --variable admin_key=YOUR_ADMIN_KEY \
   --variable project_name="My New Project"
 ```
 
 **List all projects:**
 ```bash
-hurl scripts/hurl/list-projects.hurl
+hurl --variables-file scripts/hurl/.env scripts/hurl/list-projects.hurl
 ```
 
 **Delete a project:**
 ```bash
-hurl scripts/hurl/delete-project.hurl \
+hurl --variables-file scripts/hurl/.env scripts/hurl/delete-project.hurl \
   --variable project_id="rc_proj_abc123"
 ```
 
@@ -52,7 +74,7 @@ hurl scripts/hurl/delete-project.hurl \
 
 Run the complete comment workflow test (create, read, update, delete):
 ```bash
-hurl scripts/hurl/test-comment-workflow.hurl
+hurl --variables-file scripts/hurl/.env scripts/hurl/test-comment-workflow.hurl
 ```
 
 This will:
@@ -109,16 +131,18 @@ The `.hurlrc` file sets default variables. You can override them with:
 
 **Create a project and capture the API key:**
 ```bash
-hurl scripts/hurl/create-api-key.hurl \
+hurl --variables-file scripts/hurl/.env \
+  scripts/hurl/create-api-key.hurl \
   --variable project_name="Production Site" \
-  --json | jq -r '.apiKey'
+  --json | jq -r '.captures[-1].api_key'
 ```
 
 **Test with local server:**
 ```bash
-REVIEWCYCLE_API_URL="http://localhost:3000" \
-REVIEWCYCLE_API_KEY="rc_proj_demo123" \
-hurl scripts/hurl/test-comment-workflow.hurl --test
+hurl scripts/hurl/test-comment-workflow.hurl \
+  --variable api_url=http://localhost:3000 \
+  --variable api_key=rc_proj_demo123 \
+  --test
 ```
 
 **Run all tests:**
