@@ -33,6 +33,7 @@ export interface Comment {
   elementSelector?: string;
   elementXPath?: string;
   elementText?: string;
+  elementId?: string; // Unique ID added to element when comment is created
   boundingRect?: BoundingRect;
   domContext?: DOMContext;
   computedStyles?: Record<string, string>;
@@ -51,6 +52,7 @@ export interface CreateCommentRequest {
   elementSelector?: string;
   elementXPath?: string;
   elementText?: string;
+  elementId?: string; // Unique ID added to element when comment is created
   boundingRect?: BoundingRect;
   domContext?: DOMContext;
   computedStyles?: Record<string, string>;
@@ -63,6 +65,7 @@ export interface ElementContext {
   boundingRect: BoundingRect;
   computedStyles: Record<string, string>;
   textContent?: string;
+  elementId?: string; // Unique ID added to element when comment is created
   attributes: Record<string, string>;
   ancestorPath: ElementInfo[];
   siblings: ElementInfo[];

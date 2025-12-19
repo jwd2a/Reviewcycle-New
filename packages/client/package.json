@@ -1,6 +1,6 @@
 {
   "name": "reviewcycle-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lightweight prototype review and commenting client",
   "main": "./dist/reviewcycle.umd.js",
   "module": "./dist/reviewcycle.es.js",

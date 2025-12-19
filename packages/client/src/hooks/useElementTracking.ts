@@ -32,14 +32,48 @@ export function useElementTracking(comment: Comment): UseElementTrackingResult {
   const findElement = (): HTMLElement | null => {
     let element: HTMLElement | null = null;
 
-    // Try CSS selector first (most efficient)
-    if (comment.elementSelector) {
-      element = findElementBySelector(comment.elementSelector);
+    // First, try to find by unique element ID (most reliable)
+    if (comment.elementId) {
+      element = document.querySelector(`[data-rc-element-id="${comment.elementId}"]`) as HTMLElement;
+
+      // Verify the element text content matches (if we have text content stored)
+      if (element && comment.elementText) {
+        const currentText = element.textContent?.trim() || '';
+        // If text doesn't match, this is a different element
+        if (currentText !== comment.elementText) {
+          return null;
+        }
+      }
+
+      if (element) return element;
     }
 
-    // Fall back to XPath if CSS selector fails
-    if (!element && comment.elementXPath) {
+    // Fall back to CSS selector (less reliable in SPAs)
+    if (comment.elementSelector) {
+      element = findElementBySelector(comment.elementSelector);
+
+      // Verify text content if we have it
+      if (element && comment.elementText) {
+        const currentText = element.textContent?.trim() || '';
+        if (currentText !== comment.elementText) {
+          return null; // Text mismatch, wrong element
+        }
+      }
+
+      if (element) return element;
+    }
+
+    // Last resort: try XPath
+    if (comment.elementXPath) {
       element = findElementByXPath(comment.elementXPath);
+
+      // Verify text content if we have it
+      if (element && comment.elementText) {
+        const currentText = element.textContent?.trim() || '';
+        if (currentText !== comment.elementText) {
+          return null; // Text mismatch, wrong element
+        }
+      }
     }
 
     return element;
@@ -212,7 +246,7 @@ export function useElementTracking(comment: Comment): UseElementTrackingResult {
       history.pushState = originalPushState;
       history.replaceState = originalReplaceState;
     };
-  }, [comment.elementSelector, comment.elementXPath, comment.id]);
+  }, [comment.elementSelector, comment.elementXPath, comment.elementId, comment.elementText, comment.id]);
 
   return {
     position,

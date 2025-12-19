@@ -62,6 +62,7 @@ export const App: FunctionComponent<AppProps> = ({
       elementSelector: dialogContext.selector,
       elementXPath: dialogContext.xpath,
       elementText: dialogContext.textContent,
+      elementId: dialogContext.elementId, // Store unique element ID
       boundingRect: dialogContext.boundingRect,
       domContext: {
         ancestorPath: dialogContext.ancestorPath,

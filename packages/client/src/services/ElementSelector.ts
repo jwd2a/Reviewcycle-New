@@ -99,6 +99,12 @@ export class ElementSelector {
   };
 
   captureElementContext(element: HTMLElement): ElementContext {
+    // Generate a unique ID for this element instance
+    const elementId = `rc-el-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+    // Add the unique ID to the element as a data attribute
+    element.setAttribute('data-rc-element-id', elementId);
+
     return {
       selector: generateUniqueSelector(element),
       xpath: generateXPath(element),
@@ -108,6 +114,7 @@ export class ElementSelector {
       attributes: getRelevantAttributes(element),
       ancestorPath: getAncestorPath(element, 5),
       siblings: getSiblings(element),
+      elementId, // Store the unique ID
     };
   }
 }
