@@ -32,6 +32,7 @@ pnpm-debug.log*
 # Testing
 coverage/
 .nyc_output/
+.playwright_mcp
 
 # Temporary files
 tmp/
