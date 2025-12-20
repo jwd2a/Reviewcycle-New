@@ -13,9 +13,11 @@ interface DbComment {
   element_selector: string | null;
   element_xpath: string | null;
   element_text: string | null;
+  element_id: string | null;
   bounding_rect: any;
   dom_context: any;
   computed_styles: any;
+  click_offset: any;
   parent_id: string | null;
   thread_id: string;
   resolved: boolean;
@@ -38,9 +40,11 @@ function dbCommentToComment(dbComment: DbComment): Comment {
     elementSelector: dbComment.element_selector || undefined,
     elementXPath: dbComment.element_xpath || undefined,
     elementText: dbComment.element_text || undefined,
+    elementId: dbComment.element_id || undefined,
     boundingRect: dbComment.bounding_rect || undefined,
     domContext: dbComment.dom_context || undefined,
     computedStyles: dbComment.computed_styles || undefined,
+    clickOffset: dbComment.click_offset || undefined,
     parentId: dbComment.parent_id || undefined,
     threadId: dbComment.thread_id,
     resolved: dbComment.resolved,
@@ -150,11 +154,11 @@ export async function createComment(
       `INSERT INTO comments (
         id, project_id, user_id, text, url,
         author_name, author_email,
-        element_selector, element_xpath, element_text,
-        bounding_rect, dom_context, computed_styles,
+        element_selector, element_xpath, element_text, element_id,
+        bounding_rect, dom_context, computed_styles, click_offset,
         parent_id, thread_id, resolved
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18
       ) RETURNING *`,
       [
         commentId,
@@ -167,9 +171,11 @@ export async function createComment(
         request.elementSelector || null,
         request.elementXPath || null,
         request.elementText || null,
+        request.elementId || null,
         request.boundingRect ? JSON.stringify(request.boundingRect) : null,
         request.domContext ? JSON.stringify(request.domContext) : null,
         request.computedStyles ? JSON.stringify(request.computedStyles) : null,
+        request.clickOffset ? JSON.stringify(request.clickOffset) : null,
         request.parentId || null,
         threadId,
         false,

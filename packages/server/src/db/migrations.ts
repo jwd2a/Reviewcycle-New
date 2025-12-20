@@ -115,6 +115,17 @@ BEGIN
   END IF;
 END $$;
 
+-- Add click_offset column to comments if it doesn't exist
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'comments' AND column_name = 'click_offset'
+  ) THEN
+    ALTER TABLE comments ADD COLUMN click_offset JSONB;
+  END IF;
+END $$;
+
 -- Create index on user_id after the column is added
 CREATE INDEX IF NOT EXISTS idx_comments_user_id ON comments(user_id);
 `;

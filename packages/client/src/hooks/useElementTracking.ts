@@ -93,8 +93,9 @@ export function useElementTracking(comment: Comment): UseElementTrackingResult {
 
       if (elementIsVisible) {
         setPosition({
-          x: rect.left + rect.width / 2,
-          y: rect.top + rect.height / 2,
+          // Use precise click offset if available, otherwise center of element
+          x: rect.left + (comment.clickOffset?.x ?? rect.width / 2),
+          y: rect.top + (comment.clickOffset?.y ?? rect.height / 2),
         });
         setIsVisible(true);
       } else {
@@ -246,7 +247,7 @@ export function useElementTracking(comment: Comment): UseElementTrackingResult {
       history.pushState = originalPushState;
       history.replaceState = originalReplaceState;
     };
-  }, [comment.elementSelector, comment.elementXPath, comment.elementId, comment.elementText, comment.id]);
+  }, [comment.elementSelector, comment.elementXPath, comment.elementId, comment.elementText, comment.clickOffset, comment.id]);
 
   return {
     position,

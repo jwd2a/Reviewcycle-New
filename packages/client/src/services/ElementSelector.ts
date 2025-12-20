@@ -90,7 +90,14 @@ export class ElementSelector {
       return;
     }
 
-    const context = this.captureElementContext(element);
+    // Capture the exact click position relative to the element
+    const rect = element.getBoundingClientRect();
+    const clickOffset = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
+
+    const context = this.captureElementContext(element, clickOffset);
     this.deactivate();
 
     if (this.onSelect) {
@@ -98,7 +105,10 @@ export class ElementSelector {
     }
   };
 
-  captureElementContext(element: HTMLElement): ElementContext {
+  captureElementContext(
+    element: HTMLElement,
+    clickOffset?: { x: number; y: number }
+  ): ElementContext {
     // Generate a unique ID for this element instance
     const elementId = `rc-el-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
@@ -115,6 +125,7 @@ export class ElementSelector {
       ancestorPath: getAncestorPath(element, 5),
       siblings: getSiblings(element),
       elementId, // Store the unique ID
+      clickOffset, // Store the precise click position
     };
   }
 }

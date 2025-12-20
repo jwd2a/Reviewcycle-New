@@ -46,6 +46,7 @@ export interface Comment {
   boundingRect?: BoundingRect;
   domContext?: DOMContext;
   computedStyles?: Record<string, string>;
+  clickOffset?: { x: number; y: number }; // Precise click position relative to element
   parentId?: string;
   threadId: string;
   resolved?: boolean;
@@ -65,6 +66,7 @@ export interface CreateCommentRequest {
   boundingRect?: BoundingRect;
   domContext?: DOMContext;
   computedStyles?: Record<string, string>;
+  clickOffset?: { x: number; y: number }; // Precise click position relative to element
   parentId?: string;
 }
 
@@ -78,6 +80,7 @@ export interface ElementContext {
   attributes: Record<string, string>;
   ancestorPath: ElementInfo[];
   siblings: ElementInfo[];
+  clickOffset?: { x: number; y: number }; // Precise click position relative to element
 }
 
 export interface GeneratedPrompt {

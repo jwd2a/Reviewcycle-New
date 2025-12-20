@@ -83,6 +83,7 @@ export const App: FunctionComponent<AppProps> = ({
         siblings: dialogContext.siblings,
       },
       computedStyles: dialogContext.computedStyles,
+      clickOffset: dialogContext.clickOffset, // Store precise click position
     });
 
     setDialogContext(null);
