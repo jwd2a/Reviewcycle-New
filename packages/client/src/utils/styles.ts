@@ -12,6 +12,75 @@ export function getInjectedStyles(): string {
       box-sizing: border-box;
     }
 
+    /* User Button */
+    .rc-user-button {
+      position: fixed;
+      bottom: 24px;
+      right: 96px;
+      z-index: 999998;
+      height: 40px;
+      border-radius: 20px;
+      background: white;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .rc-user-button:hover {
+      background: #f9fafb;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .rc-user-button-signin {
+      padding: 0 20px;
+    }
+
+    .rc-user-button-signed-in {
+      padding: 4px 4px 4px 12px;
+      gap: 10px;
+    }
+
+    .rc-user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .rc-user-name {
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .rc-user-button-signout {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      color: #6b7280;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .rc-user-button-signout:hover {
+      background: #f3f4f6;
+      color: #111827;
+    }
+
     /* Floating Button */
     .rc-floating-button {
       position: fixed;
@@ -85,6 +154,25 @@ export function getInjectedStyles(): string {
       font-weight: 600;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
       position: relative;
+    }
+
+    .rc-marker-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #ef4444;
+      color: white;
+      border-radius: 10px;
+      padding: 2px 6px;
+      font-size: 11px;
+      font-weight: 700;
+      min-width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      border: 2px solid white;
     }
 
     .rc-marker-pulse {
@@ -280,6 +368,20 @@ export function getInjectedStyles(): string {
     }
 
     /* Comment Thread */
+    .rc-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6b7280;
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+
+    .rc-section-label:first-child {
+      margin-top: 0;
+    }
+
     .rc-comment {
       padding: 16px 0;
       border-bottom: 1px solid #e5e7eb;
@@ -287,6 +389,20 @@ export function getInjectedStyles(): string {
 
     .rc-comment:last-child {
       border-bottom: none;
+    }
+
+    .rc-comment-original {
+      background: #f9fafb;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 8px;
+    }
+
+    .rc-comment-reply {
+      padding-left: 16px;
+      border-left: 2px solid #e5e7eb;
+      margin-left: 8px;
     }
 
     .rc-comment-header {
@@ -305,6 +421,29 @@ export function getInjectedStyles(): string {
     .rc-comment-date {
       font-size: 12px;
       color: #6b7280;
+    }
+
+    .rc-comment-delete {
+      margin-left: auto;
+      padding: 4px 8px;
+      border: none;
+      background: transparent;
+      color: #ef4444;
+      cursor: pointer;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .rc-comment-delete:hover {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .rc-comment-delete:active {
+      transform: scale(0.95);
     }
 
     .rc-comment-text {

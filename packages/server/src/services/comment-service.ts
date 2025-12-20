@@ -1,10 +1,11 @@
 import { createId } from '@paralleldrive/cuid2';
 import { query, getClient } from '../db/connection.js';
-import type { Comment, CreateCommentRequest } from 'reviewcycle-shared';
+import type { Comment, CreateCommentRequest, User } from 'reviewcycle-shared';
 
 interface DbComment {
   id: string;
   project_id: string;
+  user_id: string | null;
   text: string;
   url: string;
   author_name: string | null;
@@ -20,13 +21,18 @@ interface DbComment {
   resolved: boolean;
   created_at: Date;
   updated_at: Date;
+  // User fields (from LEFT JOIN)
+  user_email?: string;
+  user_name?: string;
+  user_avatar_url?: string;
 }
 
 function dbCommentToComment(dbComment: DbComment): Comment {
-  return {
+  const comment: Comment = {
     id: dbComment.id,
     text: dbComment.text,
     url: dbComment.url,
+    userId: dbComment.user_id || undefined,
     authorName: dbComment.author_name || undefined,
     authorEmail: dbComment.author_email || undefined,
     elementSelector: dbComment.element_selector || undefined,
@@ -41,6 +47,18 @@ function dbCommentToComment(dbComment: DbComment): Comment {
     createdAt: dbComment.created_at.toISOString(),
     updatedAt: dbComment.updated_at.toISOString(),
   };
+
+  // Add user object if user data is available
+  if (dbComment.user_id && dbComment.user_email) {
+    comment.user = {
+      id: dbComment.user_id,
+      email: dbComment.user_email,
+      name: dbComment.user_name || undefined,
+      avatarUrl: dbComment.user_avatar_url || undefined,
+    };
+  }
+
+  return comment;
 }
 
 export async function getComments(
@@ -48,17 +66,19 @@ export async function getComments(
   url?: string
 ): Promise<Comment[]> {
   let queryText = `
-    SELECT * FROM comments
-    WHERE project_id = $1 AND parent_id IS NULL
+    SELECT c.*, u.email as user_email, u.name as user_name, u.avatar_url as user_avatar_url
+    FROM comments c
+    LEFT JOIN users u ON c.user_id = u.id
+    WHERE c.project_id = $1 AND c.parent_id IS NULL
   `;
   const params: any[] = [projectId];
 
   if (url) {
-    queryText += ` AND url = $2`;
+    queryText += ` AND c.url = $2`;
     params.push(url);
   }
 
-  queryText += ` ORDER BY created_at DESC`;
+  queryText += ` ORDER BY c.created_at DESC`;
 
   const result = await query<DbComment>(queryText, params);
   return result.rows.map(dbCommentToComment);
@@ -69,7 +89,10 @@ export async function getComment(
   commentId: string
 ): Promise<Comment | null> {
   const result = await query<DbComment>(
-    `SELECT * FROM comments WHERE project_id = $1 AND id = $2`,
+    `SELECT c.*, u.email as user_email, u.name as user_name, u.avatar_url as user_avatar_url
+     FROM comments c
+     LEFT JOIN users u ON c.user_id = u.id
+     WHERE c.project_id = $1 AND c.id = $2`,
     [projectId, commentId]
   );
 
@@ -85,9 +108,11 @@ export async function getThread(
   threadId: string
 ): Promise<Comment[]> {
   const result = await query<DbComment>(
-    `SELECT * FROM comments
-     WHERE project_id = $1 AND thread_id = $2
-     ORDER BY created_at ASC`,
+    `SELECT c.*, u.email as user_email, u.name as user_name, u.avatar_url as user_avatar_url
+     FROM comments c
+     LEFT JOIN users u ON c.user_id = u.id
+     WHERE c.project_id = $1 AND c.thread_id = $2
+     ORDER BY c.created_at ASC`,
     [projectId, threadId]
   );
 
@@ -96,7 +121,8 @@ export async function getThread(
 
 export async function createComment(
   projectId: string,
-  request: CreateCommentRequest
+  request: CreateCommentRequest,
+  userId?: string
 ): Promise<Comment> {
   const client = await getClient();
 
@@ -122,17 +148,18 @@ export async function createComment(
 
     const result = await client.query<DbComment>(
       `INSERT INTO comments (
-        id, project_id, text, url,
+        id, project_id, user_id, text, url,
         author_name, author_email,
         element_selector, element_xpath, element_text,
         bounding_rect, dom_context, computed_styles,
         parent_id, thread_id, resolved
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16
       ) RETURNING *`,
       [
         commentId,
         projectId,
+        userId || null,
         request.text,
         request.url,
         request.authorName || null,
@@ -151,7 +178,9 @@ export async function createComment(
 
     await client.query('COMMIT');
 
-    return dbCommentToComment(result.rows[0]);
+    // Return the comment with user info
+    const createdComment = await getComment(projectId, commentId);
+    return createdComment!;
   } catch (error) {
     await client.query('ROLLBACK');
     throw error;
@@ -210,12 +239,31 @@ export async function updateComment(
 
 export async function deleteComment(
   projectId: string,
-  commentId: string
+  commentId: string,
+  userId?: string
 ): Promise<string[]> {
   const client = await getClient();
 
   try {
     await client.query('BEGIN');
+
+    // Check if comment exists and verify ownership if userId is provided
+    const commentResult = await client.query<{ id: string; user_id: string | null }>(
+      `SELECT id, user_id FROM comments WHERE project_id = $1 AND id = $2`,
+      [projectId, commentId]
+    );
+
+    if (commentResult.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return [];
+    }
+
+    const comment = commentResult.rows[0];
+
+    // If userId is provided, verify ownership
+    if (userId && comment.user_id && comment.user_id !== userId) {
+      throw new Error('Unauthorized: You can only delete your own comments');
+    }
 
     // Get all comment IDs that will be deleted (parent + children)
     const selectResult = await client.query<{ id: string }>(
@@ -232,11 +280,6 @@ export async function deleteComment(
     );
 
     const deletedIds = selectResult.rows.map(row => row.id);
-
-    if (deletedIds.length === 0) {
-      await client.query('ROLLBACK');
-      return [];
-    }
 
     // Delete the comment (cascading delete will handle children)
     await client.query(

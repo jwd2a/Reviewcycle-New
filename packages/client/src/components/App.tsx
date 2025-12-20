@@ -7,18 +7,23 @@ import { FloatingButton } from './FloatingButton.js';
 import { CommentMarker } from './CommentMarker.js';
 import { CommentDialog } from './CommentDialog.js';
 import { CommentThread } from './CommentThread.js';
+import { UserButton } from './UserButton.js';
 
 interface AppProps {
   config: ReviewCycleConfig;
   stateManager: StateManager;
   elementSelector: ElementSelector;
+  clerkPublishableKey: string | null;
 }
 
 export const App: FunctionComponent<AppProps> = ({
+  config: _config,
   stateManager,
   elementSelector,
+  clerkPublishableKey,
 }) => {
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [allComments, setAllComments] = useState<Comment[]>([]);
+  const [parentComments, setParentComments] = useState<Comment[]>([]);
   const [activeThreadId, setActiveThreadId] = useState<string | null>(null);
   const [isSelecting, setIsSelecting] = useState(false);
   const [dialogContext, setDialogContext] = useState<ElementContext | null>(null);
@@ -36,8 +41,18 @@ export const App: FunctionComponent<AppProps> = ({
 
   const loadComments = async () => {
     const currentUrl = window.location.href;
-    const allComments = await stateManager.getComments(currentUrl);
-    setComments(allComments);
+    const comments = await stateManager.getComments(currentUrl);
+    setAllComments(comments);
+
+    // Only parent comments (those without parentId) get markers
+    const parents = comments.filter(c => !c.parentId);
+    setParentComments(parents);
+  };
+
+  // Calculate reply count for a thread (includes parent + all replies)
+  const getThreadCount = (threadId: string): number => {
+    const threadComments = allComments.filter(c => c.threadId === threadId);
+    return threadComments.length;
   };
 
   const handleStartSelection = () => {
@@ -52,13 +67,12 @@ export const App: FunctionComponent<AppProps> = ({
     setDialogContext(null);
   };
 
-  const handleSubmitComment = async (text: string, authorName?: string) => {
+  const handleSubmitComment = async (text: string) => {
     if (!dialogContext) return;
 
     await stateManager.addComment({
       text,
       url: window.location.href,
-      authorName,
       elementSelector: dialogContext.selector,
       elementXPath: dialogContext.xpath,
       elementText: dialogContext.textContent,
@@ -86,14 +100,17 @@ export const App: FunctionComponent<AppProps> = ({
     <div>
       <FloatingButton
         onClick={handleStartSelection}
-        commentCount={comments.length}
+        commentCount={parentComments.length}
         isSelecting={isSelecting}
       />
 
-      {comments.map((comment) => (
+      {clerkPublishableKey && <UserButton />}
+
+      {parentComments.map((comment) => (
         <CommentMarker
           key={comment.id}
           comment={comment}
+          replyCount={getThreadCount(comment.threadId)}
           onClick={() => handleMarkerClick(comment)}
         />
       ))}

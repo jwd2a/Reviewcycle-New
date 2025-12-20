@@ -24,11 +24,20 @@ export interface DOMContext {
   siblings: ElementInfo[];
 }
 
+export interface User {
+  id: string;
+  email: string;
+  name?: string;
+  avatarUrl?: string;
+}
+
 export interface Comment {
   id: string;
   text: string;
   url: string;
-  authorName?: string;
+  userId?: string;
+  user?: User; // Populated user object (for display)
+  authorName?: string; // Legacy field, kept for backward compatibility
   authorEmail?: string;
   elementSelector?: string;
   elementXPath?: string;

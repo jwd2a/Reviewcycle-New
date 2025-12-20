@@ -13,6 +13,16 @@ CREATE TABLE IF NOT EXISTS projects (
   metadata JSONB DEFAULT '{}'::jsonb
 );
 
+-- Users table
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY, -- Clerk user ID
+  email TEXT NOT NULL UNIQUE,
+  name TEXT,
+  avatar_url TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- Comments table
 CREATE TABLE IF NOT EXISTS comments (
   id TEXT PRIMARY KEY,
@@ -44,7 +54,7 @@ CREATE TABLE IF NOT EXISTS comments (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Indexes for performance
+-- Indexes for performance (excluding user_id for now)
 CREATE INDEX IF NOT EXISTS idx_comments_project_id ON comments(project_id);
 CREATE INDEX IF NOT EXISTS idx_comments_url ON comments(url);
 CREATE INDEX IF NOT EXISTS idx_comments_thread_id ON comments(thread_id);
@@ -63,10 +73,14 @@ $$ language 'plpgsql';
 
 -- Drop triggers if they exist
 DROP TRIGGER IF EXISTS update_projects_updated_at ON projects;
+DROP TRIGGER IF EXISTS update_users_updated_at ON users;
 DROP TRIGGER IF EXISTS update_comments_updated_at ON comments;
 
 -- Apply triggers to tables
 CREATE TRIGGER update_projects_updated_at BEFORE UPDATE ON projects
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_comments_updated_at BEFORE UPDATE ON comments
@@ -78,12 +92,42 @@ INSERT INTO projects (id, name, metadata) VALUES
 ON CONFLICT (id) DO NOTHING;
 `;
 
+const ALTER_MIGRATIONS = `
+-- Add user_id column to comments if it doesn't exist
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'comments' AND column_name = 'user_id'
+  ) THEN
+    ALTER TABLE comments ADD COLUMN user_id TEXT REFERENCES users(id) ON DELETE SET NULL;
+  END IF;
+END $$;
+
+-- Add element_id column to comments if it doesn't exist
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'comments' AND column_name = 'element_id'
+  ) THEN
+    ALTER TABLE comments ADD COLUMN element_id TEXT;
+  END IF;
+END $$;
+
+-- Create index on user_id after the column is added
+CREATE INDEX IF NOT EXISTS idx_comments_user_id ON comments(user_id);
+`;
+
 export async function runMigrations() {
   console.log('Running database migrations...');
 
   try {
-    // Execute the schema
+    // Execute the base schema
     await query(SCHEMA_SQL);
+
+    // Execute alter migrations
+    await query(ALTER_MIGRATIONS);
 
     console.log('Database migrations completed successfully');
   } catch (error) {

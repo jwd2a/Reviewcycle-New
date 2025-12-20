@@ -14,11 +14,13 @@ export class ApiClient {
   private baseUrl: string;
   private apiKey: string;
   private projectId: string;
+  private getToken?: () => Promise<string | null>;
 
-  constructor(config: ReviewCycleConfig) {
+  constructor(config: ReviewCycleConfig, getToken?: () => Promise<string | null>) {
     this.baseUrl = config.baseUrl || 'https://api.reviewcycle.dev';
     this.apiKey = config.apiKey;
     this.projectId = config.projectId || config.apiKey;
+    this.getToken = getToken;
   }
 
   async getComments(url?: string): Promise<Comment[]> {
@@ -76,13 +78,29 @@ export class ApiClient {
   }
 
   private async fetch(path: string, options: RequestInit = {}): Promise<any> {
+    // Try to get Clerk token first, fall back to API key
+    let authToken = this.apiKey;
+    if (this.getToken) {
+      const clerkToken = await this.getToken();
+      if (clerkToken) {
+        authToken = clerkToken;
+      }
+    }
+
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authToken}`,
+      ...options.headers as Record<string, string>,
+    };
+
+    // Add project ID header when using Clerk auth
+    if (authToken !== this.apiKey) {
+      headers['x-project-id'] = this.projectId;
+    }
+
     const response = await fetch(`${this.baseUrl}${path}`, {
       ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.apiKey}`,
-        ...options.headers,
-      },
+      headers,
     });
 
     const data = await response.json();

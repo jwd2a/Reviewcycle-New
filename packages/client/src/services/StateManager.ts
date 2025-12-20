@@ -19,14 +19,14 @@ export class StateManager {
   private wsManager: WebSocketManager | null;
   private mode: 'development' | 'production';
 
-  constructor(config: ReviewCycleConfig) {
+  constructor(config: ReviewCycleConfig, getToken?: () => Promise<string | null>) {
     this.mode = config.mode || 'development';
     this.localComments = new Map();
     this.listeners = new Set();
 
     if (this.mode === 'production') {
       // Production mode: Use API + WebSocket
-      this.apiClient = new ApiClient(config);
+      this.apiClient = new ApiClient(config, getToken);
       this.wsManager = new WebSocketManager(config);
       this.setupWebSocketHandlers();
       this.wsManager.connect();

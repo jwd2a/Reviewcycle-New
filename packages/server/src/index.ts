@@ -5,6 +5,7 @@ import { authMiddleware } from './middleware/auth.js';
 import { configureCors } from './middleware/cors.js';
 import { commentRoutes } from './routes/comments.js';
 import { adminRoutes } from './routes/admin.js';
+import { configRoutes } from './routes/config.js';
 import { setupWebSocket } from './websocket/server.js';
 
 const fastify = Fastify({
@@ -23,6 +24,7 @@ fastify.setErrorHandler(errorHandler);
 await setupWebSocket(fastify);
 
 // Register routes
+fastify.register(configRoutes);
 fastify.register(commentRoutes);
 fastify.register(adminRoutes);
 

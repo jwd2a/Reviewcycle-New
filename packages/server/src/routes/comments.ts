@@ -59,7 +59,7 @@ export async function commentRoutes(fastify: FastifyInstance) {
     }
 
     try {
-      const comment = await commentService.createComment(projectId, commentRequest);
+      const comment = await commentService.createComment(projectId, commentRequest, request.userId);
 
       // Broadcast to WebSocket clients
       const payload: CommentCreatedPayload = {
@@ -163,13 +163,24 @@ export async function commentRoutes(fastify: FastifyInstance) {
     // Get comment before deletion to get URL for broadcast
     const commentToDelete = await commentService.getComment(projectId, id);
 
-    const deletedIds = await commentService.deleteComment(projectId, id);
+    let deletedIds: string[];
+    try {
+      deletedIds = await commentService.deleteComment(projectId, id, request.userId);
 
-    if (deletedIds.length === 0) {
-      return reply.code(404).send({
-        error: 'Comment not found',
-        code: 'NOT_FOUND',
-      });
+      if (deletedIds.length === 0) {
+        return reply.code(404).send({
+          error: 'Comment not found',
+          code: 'NOT_FOUND',
+        });
+      }
+    } catch (error: any) {
+      if (error.message?.includes('Unauthorized')) {
+        return reply.code(403).send({
+          error: error.message,
+          code: 'FORBIDDEN',
+        });
+      }
+      throw error;
     }
 
     // Broadcast to WebSocket clients

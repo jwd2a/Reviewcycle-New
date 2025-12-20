@@ -5,21 +5,20 @@ import { ElementContext } from 'reviewcycle-shared';
 interface CommentDialogProps {
   context: ElementContext;
   onClose: () => void;
-  onSubmit: (text: string, authorName?: string) => void;
+  onSubmit: (text: string) => void;
 }
 
 export const CommentDialog: FunctionComponent<CommentDialogProps> = ({
-  context,
+  context: _context,
   onClose,
   onSubmit,
 }) => {
   const [text, setText] = useState('');
-  const [authorName, setAuthorName] = useState('');
 
   const handleSubmit = (e: Event) => {
     e.preventDefault();
     if (text.trim()) {
-      onSubmit(text, authorName || undefined);
+      onSubmit(text);
     }
   };
 
@@ -43,20 +42,6 @@ export const CommentDialog: FunctionComponent<CommentDialogProps> = ({
 
         <form onSubmit={handleSubmit}>
           <div class="rc-modal-body">
-            {context.textContent && (
-              <div class="rc-comment-element-info">
-                <strong>Element:</strong>{' '}
-                <span class="rc-comment-element-selector">{context.selector}</span>
-                {context.textContent && (
-                  <>
-                    <br />
-                    <strong>Text:</strong> "{context.textContent.substring(0, 50)}
-                    {context.textContent.length > 50 ? '...' : ''}"
-                  </>
-                )}
-              </div>
-            )}
-
             <div class="rc-form-group">
               <label class="rc-label" for="comment-text">
                 Comment *
@@ -69,20 +54,6 @@ export const CommentDialog: FunctionComponent<CommentDialogProps> = ({
                 placeholder="Describe what needs to be changed..."
                 required
                 autoFocus
-              />
-            </div>
-
-            <div class="rc-form-group">
-              <label class="rc-label" for="author-name">
-                Your Name (optional)
-              </label>
-              <input
-                id="author-name"
-                type="text"
-                class="rc-input"
-                value={authorName}
-                onInput={(e) => setAuthorName((e.target as HTMLInputElement).value)}
-                placeholder="John Doe"
               />
             </div>
           </div>
